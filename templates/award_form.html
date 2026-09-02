@@ -1,0 +1,62 @@
+{% extends 'sidebar.html' %}
+{% block title %}{% if award %}Edit Award{% else %}Add Award{% endif %}{% endblock %}
+{% block page_title %}{% if award %}Edit Award{% else %}Add Award{% endif %}{% endblock %}
+{% block content %}
+<div class="form-container">
+    <div class="form-heading">
+        <div>
+            <h1>{% if award %}Edit Award{% else %}Add New Award{% endif %}</h1>
+            <p>Add award or distinction information.</p>
+        </div>
+        <a href="{% url 'awards' %}" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-card">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Year *</label>
+                    <input type="number" name="year" value="{{ award.year|default:'' }}" placeholder="2026" required>
+                </div>
+                <div class="form-group">
+                    <label>Display Order</label>
+                    <input type="number" name="order" value="{{ award.order|default:'0' }}" placeholder="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Award Title *</label>
+                <input type="text" name="title" value="{{ award.title|default:'' }}" placeholder="Enter award title" required>
+            </div>
+            <div class="form-group">
+                <label>Awarding Body</label>
+                <input type="text" name="awarding_body" value="{{ award.awarding_body|default:'' }}" placeholder="University / Organization">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" rows="5" placeholder="Enter award description...">{{ award.description|default:'' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Award Image</label>
+                <input type="file" name="image" accept="image/*">
+                {% if award.image %}
+                <div class="current-image">
+                    <img src="{{ award.image.url }}" alt="{{ award.title }}">
+                    <a href="{{ award.image.url }}" target="_blank">View Current Image</a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="is_active" id="is_active" {% if not award or award.is_active %}checked{% endif %}>
+                <label for="is_active">Show this award on website</label>
+            </div>
+            <div class="form-actions">
+                <a href="{% url 'awards' %}" class="cancel-btn">Cancel</a>
+                <button type="submit" class="save-btn"><i class="fa-solid fa-check"></i> {% if award %}Update Award{% else %}Save Award{% endif %}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<style>
+.form-container{max-width:900px}.form-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.form-heading h1{font-size:25px;color:#111827}.form-heading p{font-size:13px;color:#6b7280;margin-top:5px}.back-btn{padding:10px 15px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;color:#475569;font-size:13px}.form-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:30px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-size:13px;font-weight:600;color:#334155}.form-group input,.form-group textarea{width:100%;padding:12px;border:1px solid #dbe2ea;border-radius:8px;outline:none;font-family:inherit}.form-group input:focus,.form-group textarea:focus{border-color:#2563eb}.form-group textarea{resize:vertical}.current-image{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px;background:#f8fafc;border-radius:8px}.current-image img{width:60px;height:60px;object-fit:cover;border-radius:6px}.current-image a{color:#2563eb;font-size:12px}.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:20px;font-size:13px}.form-actions{display:flex;justify-content:flex-end;gap:10px;padding-top:20px;border-top:1px solid #f1f5f9}.cancel-btn,.save-btn{padding:11px 18px;border:0;border-radius:8px;text-decoration:none;cursor:pointer;font-size:13px}.cancel-btn{background:#f1f5f9;color:#475569}.save-btn{background:#2563eb;color:#fff}
+</style>
+{% endblock %}

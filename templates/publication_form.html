@@ -1,0 +1,73 @@
+{% extends 'sidebar.html' %}
+{% block title %}{% if publication %}Edit Publication{% else %}Add Publication{% endif %}{% endblock %}
+{% block content %}
+<div class="form-container">
+    <div class="heading">
+        <div>
+            <h1>{% if publication %}Edit Publication{% else %}Add Publication{% endif %}</h1>
+            <p>Enter research publication details.</p>
+        </div>
+        <a href="{% url 'publications' %}" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-card">
+            <div class="form-group">
+                <label>Publication Title *</label>
+                <input type="text" name="title" value="{{ publication.title|default:'' }}" placeholder="Enter publication title" required>
+            </div>
+            <div class="form-group">
+                <label>Authors *</label>
+                <textarea name="authors" rows="3" placeholder="Enter author names" required>{{ publication.authors|default:'' }}</textarea>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Publication Type</label>
+                    <select name="publication_type">
+                        <option value="journal" {% if publication.publication_type == 'journal' %}selected{% endif %}>Journal Article</option>
+                        <option value="conference" {% if publication.publication_type == 'conference' %}selected{% endif %}>Conference Paper</option>
+                        <option value="book_chapter" {% if publication.publication_type == 'book_chapter' %}selected{% endif %}>Book Chapter</option>
+                        <option value="book" {% if publication.publication_type == 'book' %}selected{% endif %}>Book</option>
+                        <option value="other" {% if publication.publication_type == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Publication Year *</label>
+                    <input type="number" name="publication_year" value="{{ publication.publication_year|default:'' }}" placeholder="2026" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Journal / Venue</label>
+                <input type="text" name="journal_or_venue" value="{{ publication.journal_or_venue|default:'' }}" placeholder="Journal, Conference or Publisher">
+            </div>
+            <div class="form-group">
+                <label>DOI / Publication URL</label>
+                <input type="url" name="doi" value="{{ publication.doi|default:'' }}" placeholder="https://doi.org/...">
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Citation Count</label>
+                    <input type="number" name="citation_count" value="{{ publication.citation_count|default:'0' }}" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Abstract</label>
+                    <textarea name="abstract" rows="3" placeholder="Enter abstract">{{ publication.abstract|default:'' }}</textarea>
+                </div>
+            </div>
+            <div class="checks">
+                <label><input type="checkbox" name="scopus_indexed" {% if publication.scopus_indexed %}checked{% endif %}> Scopus Indexed</label>
+                <label><input type="checkbox" name="is_top_publication" {% if publication.is_top_publication %}checked{% endif %}> Top Publication</label>
+                <label><input type="checkbox" name="is_recent" {% if publication.is_recent %}checked{% endif %}> Recent Publication</label>
+                <label><input type="checkbox" name="is_active" {% if not publication or publication.is_active %}checked{% endif %}> Active</label>
+            </div>
+            <div class="actions-bottom">
+                <a href="{% url 'publications' %}" class="cancel">Cancel</a>
+                <button type="submit" class="save"><i class="fa-solid fa-check"></i> {% if publication %}Update Publication{% else %}Save Publication{% endif %}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<style>
+.form-container{max-width:950px}.heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.heading h1{font-size:25px;color:#111827}.heading p{font-size:13px;color:#6b7280;margin-top:5px}.back{padding:10px 15px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;color:#475569;font-size:13px}.form-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:30px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;color:#334155;font-size:13px;font-weight:600}.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px;border:1px solid #dbe2ea;border-radius:8px;outline:none;font-family:inherit;font-size:13px}.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#2563eb}.form-group textarea{resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:20px}.checks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 25px}.checks label{font-size:13px;color:#475569}.checks input{margin-right:7px}.actions-bottom{display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #f1f5f9;padding-top:20px}.cancel,.save{padding:11px 18px;border:0;border-radius:8px;text-decoration:none;cursor:pointer;font-size:13px}.cancel{background:#f1f5f9;color:#475569}.save{background:#2563eb;color:#fff}
+</style>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'sidebar.html' %}
+{% block title %}{% if event %}Edit Event{% else %}Add Event{% endif %}{% endblock %}
+{% block content %}
+<div class="form-container">
+    <div class="heading">
+        <div>
+            <h1>{% if event %}Edit Event{% else %}Add Event{% endif %}</h1>
+            <p>Manage event details and gallery images.</p>
+        </div>
+        <a href="{% url 'events' %}" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-card">
+            <div class="form-group">
+                <label>Event Title *</label>
+                <input type="text" name="title" value="{{ event.title|default:'' }}" placeholder="Enter event title" required>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Event Type</label>
+                    <select name="event_type">
+                        <option value="book" {% if event.event_type == 'book' %}selected{% endif %}>Book Publication</option>
+                        <option value="lecture" {% if event.event_type == 'lecture' %}selected{% endif %}>Guest Talk / Lecture</option>
+                        <option value="evaluation" {% if event.event_type == 'evaluation' %}selected{% endif %}>Academic Evaluation</option>
+                        <option value="conference" {% if event.event_type == 'conference' %}selected{% endif %}>Conference Chair</option>
+                        <option value="fdp" {% if event.event_type == 'fdp' %}selected{% endif %}>Faculty Refresher</option>
+                        <option value="workshop" {% if event.event_type == 'workshop' %}selected{% endif %}>AI Workshop</option>
+                        <option value="other" {% if event.event_type == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Event Date</label>
+                    <input type="date" name="event_date" value="{{ event.event_date|date:'Y-m-d' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" rows="5" placeholder="Enter event description">{{ event.description|default:'' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Cover Image</label>
+                <input type="file" name="cover_image" accept="image/*">
+                {% if event.cover_image %}
+                <div class="current-image"><img src="{{ event.cover_image.url }}" alt="{{ event.title }}"><span>Current Cover Image</span></div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label>Gallery Images</label>
+                <input type="file" name="gallery_images" accept="image/*" multiple>
+                <small class="help">You can select multiple images at once.</small>
+            </div>
+            {% if event %}
+            {% if event.images.all %}
+            <div class="gallery">
+                <label>Existing Gallery</label>
+                <div class="gallery-grid">
+                    {% for image in event.images.all %}
+                    <div class="gallery-item">
+                        <img src="{{ image.image.url }}" alt="{{ image.caption }}">
+                        <a href="{% url 'delete_event_image' image.id %}" onclick="return confirm('Delete this image?')" class="image-delete"><i class="fa-solid fa-trash"></i></a>
+                        {% if image.caption %}<span>{{ image.caption }}</span>{% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endif %}
+            <div class="row">
+                <div class="form-group">
+                    <label>Display Order</label>
+                    <input type="number" name="order" value="{{ event.order|default:'0' }}" min="0">
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="is_active" id="active" {% if not event or event.is_active %}checked{% endif %}>
+                    <label for="active">Show on website</label>
+                </div>
+            </div>
+            <div class="bottom-actions">
+                <a href="{% url 'events' %}" class="cancel">Cancel</a>
+                <button type="submit" class="save"><i class="fa-solid fa-check"></i> {% if event %}Update Event{% else %}Save Event{% endif %}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<style>
+.form-container{max-width:950px}.heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.heading h1{font-size:25px;color:#111827}.heading p{font-size:13px;color:#6b7280;margin-top:5px}.back{padding:10px 15px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;color:#475569;font-size:13px}.form-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:30px}.form-group{margin-bottom:20px}.form-group label,.gallery>label{display:block;margin-bottom:8px;color:#334155;font-size:13px;font-weight:600}.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px;border:1px solid #dbe2ea;border-radius:8px;outline:none;font-family:inherit;font-size:13px}.form-group textarea{resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:20px}.help{display:block;color:#94a3b8;font-size:11px;margin-top:6px}.current-image{display:flex;align-items:center;gap:10px;margin-top:10px;color:#64748b;font-size:12px}.current-image img{width:65px;height:65px;object-fit:cover;border-radius:7px}.gallery{margin:25px 0}.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.gallery-item{position:relative}.gallery-item img{width:100%;height:110px;object-fit:cover;border-radius:8px}.gallery-item span{display:block;font-size:10px;color:#64748b;margin-top:4px}.image-delete{position:absolute;right:6px;top:6px;width:27px;height:27px;background:#dc2626;color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:11px}.checkbox{display:flex;align-items:center;gap:8px;padding-top:30px}.checkbox label{font-size:13px;color:#475569}.bottom-actions{display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #f1f5f9;padding-top:20px}.cancel,.save{padding:11px 18px;border:0;border-radius:8px;text-decoration:none;cursor:pointer;font-size:13px}.cancel{background:#f1f5f9;color:#475569}.save{background:#2563eb;color:#fff}
+</style>
+{% endblock %}

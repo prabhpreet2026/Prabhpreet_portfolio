@@ -1,0 +1,78 @@
+{% extends 'sidebar.html' %}
+{% block title %}Awards & Distinctions{% endblock %}
+{% block page_title %}Awards & Distinctions{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Awards & Distinctions</h1>
+        <p>Manage awards and achievements.</p>
+    </div>
+    <a href="{% url 'add_award' %}" class="btn-add"><i class="fa-solid fa-plus"></i> Add Award</a>
+</div>
+<div class="table-card">
+    <div class="table-header">
+        <h3>All Awards</h3>
+        <span>{{ awards|length }} records</span>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Award</th>
+                    <th>Year</th>
+                    <th>Awarding Body</th>
+                    <th>Image</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for award in awards %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <div class="award-name">
+                            <div class="award-icon"><i class="fa-solid fa-award"></i></div>
+                            <div>
+                                <strong>{{ award.title }}</strong>
+                                <small>{{ award.description|truncatechars:60 }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="year">{{ award.year }}</span></td>
+                    <td>{{ award.awarding_body|default:"—" }}</td>
+                    <td>
+                        {% if award.image %}
+                        <a href="{{ award.image.url }}" target="_blank" class="view-btn"><i class="fa-solid fa-image"></i> View</a>
+                        {% else %}
+                        <span class="no-image">No Image</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if award.is_active %}
+                        <span class="status active">Active</span>
+                        {% else %}
+                        <span class="status inactive">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="{% url 'edit_award' award.id %}" class="edit-btn"><i class="fa-solid fa-pen"></i></a>
+                            <a href="{% url 'delete_award' award.id %}" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty">No awards found. <a href="{% url 'add_award' %}">Add Award</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.page-header h1{font-size:25px;color:#111827}.page-header p{font-size:13px;color:#6b7280;margin-top:5px}.btn-add{display:inline-flex;align-items:center;gap:8px;padding:11px 17px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-size:13px;font-weight:600}.table-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden}.table-header{padding:20px;border-bottom:1px solid #e5e7eb}.table-header h3{font-size:16px;color:#1e293b}.table-header span{display:block;color:#94a3b8;font-size:12px;margin-top:4px}.table-responsive{overflow-x:auto}table{width:100%;min-width:900px;border-collapse:collapse}th{background:#f8fafc;color:#64748b;text-align:left;padding:14px 18px;font-size:11px;text-transform:uppercase}td{padding:15px 18px;border-top:1px solid #f1f5f9;font-size:13px;color:#475569}.award-name{display:flex;align-items:center;gap:10px}.award-icon{width:40px;height:40px;border-radius:9px;background:#fff7ed;color:#f59e0b;display:flex;align-items:center;justify-content:center}.award-name strong{display:block;color:#1e293b}.award-name small{display:block;color:#94a3b8;font-size:10px;margin-top:4px}.year{padding:5px 9px;background:#eff6ff;color:#2563eb;border-radius:6px;font-size:11px;font-weight:600}.view-btn{color:#2563eb;text-decoration:none}.no-image{color:#94a3b8}.status{padding:5px 9px;border-radius:20px;font-size:10px;font-weight:600}.active{background:#dcfce7;color:#15803d}.inactive{background:#fee2e2;color:#b91c1c}.actions{display:flex;gap:7px}.actions a{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:7px;text-decoration:none}.edit-btn{background:#eff6ff;color:#2563eb}.delete-btn{background:#fef2f2;color:#dc2626}.empty{text-align:center;padding:40px}
+</style>
+{% endblock %}

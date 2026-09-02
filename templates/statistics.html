@@ -1,0 +1,37 @@
+{% extends 'sidebar.html' %}
+{% block title %}Statistics{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Statistics</h1>
+        <p>Manage portfolio statistics and achievements.</p>
+    </div>
+    <a href="{% url 'add_statistic' %}" class="add-btn"><i class="fa-solid fa-plus"></i> Add Statistic</a>
+</div>
+<div class="stats-grid">
+    {% for statistic in statistics %}
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-chart-simple"></i></div>
+        <div class="stat-content">
+            <span>{{ statistic.title }}</span>
+            <h2>{{ statistic.value }}</h2>
+            {% if statistic.description %}<p>{{ statistic.description }}</p>{% endif %}
+        </div>
+        <div class="actions">
+            <a href="{% url 'edit_statistic' statistic.id %}" class="edit"><i class="fa-solid fa-pen"></i></a>
+            <a href="{% url 'delete_statistic' statistic.id %}" class="delete"><i class="fa-solid fa-trash"></i></a>
+        </div>
+        {% if statistic.is_active %}
+        <span class="active">Active</span>
+        {% else %}
+        <span class="inactive">Inactive</span>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="empty">No statistics found. <a href="{% url 'add_statistic' %}">Add Statistic</a></div>
+    {% endfor %}
+</div>
+<style>
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.page-header h1{font-size:25px;color:#111827}.page-header p{font-size:13px;color:#6b7280;margin-top:5px}.add-btn{display:inline-flex;align-items:center;gap:8px;background:#2563eb;color:#fff;padding:11px 17px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600}.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.stat-card{position:relative;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:22px;display:flex;align-items:flex-start;gap:14px}.stat-icon{width:45px;height:45px;flex-shrink:0;background:#eff6ff;color:#2563eb;border-radius:10px;display:flex;align-items:center;justify-content:center}.stat-content{flex:1}.stat-content span{font-size:12px;color:#64748b}.stat-content h2{font-size:25px;color:#111827;margin:5px 0}.stat-content p{font-size:11px;color:#94a3b8}.actions{position:absolute;right:15px;top:15px;display:flex;gap:5px}.actions a{width:29px;height:29px;display:flex;align-items:center;justify-content:center;border-radius:6px;text-decoration:none;font-size:10px}.edit{background:#eff6ff;color:#2563eb}.delete{background:#fef2f2;color:#dc2626}.active,.inactive{position:absolute;bottom:12px;right:15px;font-size:9px;padding:4px 7px;border-radius:15px}.active{background:#dcfce7;color:#15803d}.inactive{background:#fee2e2;color:#b91c1c}.empty{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:40px;text-align:center;color:#64748b;grid-column:1/-1}@media(max-width:900px){.stats-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.stats-grid{grid-template-columns:1fr}}
+</style>
+{% endblock %}

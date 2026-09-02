@@ -1,0 +1,33 @@
+{% extends 'sidebar.html' %}
+{% block title %}{% if area %}Edit Research Area{% else %}Add Research Area{% endif %}{% endblock %}
+{% block content %}
+<div class="form-container">
+    <div class="heading">
+        <div>
+            <h1>{% if area %}Edit Research Area{% else %}Add Research Area{% endif %}</h1>
+            <p>Add research area or keyword.</p>
+        </div>
+        <a href="{% url 'research_areas' %}" class="back"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-card">
+            <div class="form-group">
+                <label>Research Area *</label>
+                <input type="text" name="name" value="{{ area.name|default:'' }}" placeholder="e.g. Artificial Intelligence" required>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="is_active" id="active" {% if not area or area.is_active %}checked{% endif %}>
+                <label for="active">Show on website</label>
+            </div>
+            <div class="bottom-actions">
+                <a href="{% url 'research_areas' %}" class="cancel">Cancel</a>
+                <button type="submit" class="save"><i class="fa-solid fa-check"></i> {% if area %}Update{% else %}Save{% endif %}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<style>
+.form-container{max-width:650px}.heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.heading h1{font-size:25px;color:#111827}.heading p{font-size:13px;color:#6b7280;margin-top:5px}.back{padding:10px 15px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;color:#475569;font-size:13px}.form-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:30px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;color:#334155;font-size:13px;font-weight:600}.form-group input{width:100%;padding:12px;border:1px solid #dbe2ea;border-radius:8px;outline:none}.checkbox{display:flex;align-items:center;gap:8px;margin-bottom:25px;font-size:13px;color:#475569}.bottom-actions{display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #f1f5f9;padding-top:20px}.cancel,.save{padding:11px 18px;border:0;border-radius:8px;text-decoration:none;cursor:pointer;font-size:13px}.cancel{background:#f1f5f9;color:#475569}.save{background:#2563eb;color:#fff}
+</style>
+{% endblock %}

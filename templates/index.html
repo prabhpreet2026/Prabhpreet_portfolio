@@ -1,0 +1,542 @@
+{% include 'navbar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if profile %}{{ profile.name }}{% else %}Academic Profile{% endif %}</title>
+<style>
+:root{--ink:#172033;--ink-faint:#64748b;--petrol:#1e5a7a;--ochre:#c58a27;--paper:#f8fafc;--white:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6}
+a{text-decoration:none}
+.wrap{width:min(1180px,92%);margin:auto}
+.plate{padding:90px 0;border-bottom:1px solid #e2e8f0}
+.plate-head{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--petrol);margin-bottom:12px}
+.num{display:inline-block;margin-right:10px;color:var(--ochre)}
+h1{font-size:58px;line-height:1.05;margin:15px 0;color:#fff}
+h2{font-size:38px;line-height:1.2;margin:0 0 20px}
+.plate-sub{color:var(--ink-faint);margin-bottom:30px}
+#cover{background:linear-gradient(135deg,#123d70,#285b96);color:#fff;padding:110px 0 90px;position:relative;overflow:hidden}
+#cover .wrap{display:grid;grid-template-columns:1.5fr .7fr;gap:70px;align-items:center}
+.cover-eyebrow{font-size:13px;letter-spacing:2px;text-transform:uppercase;opacity:.85}
+.role{font-size:19px;margin-bottom:20px;color:#dbeafe}
+.abstract{font-size:17px;line-height:1.8;max-width:760px;color:#e2e8f0}
+.pub-highlight{display:flex;align-items:center;gap:20px;margin-top:35px;padding:18px 22px;border:1px solid rgba(255,255,255,.25);border-radius:12px;width:max-content;background:rgba(255,255,255,.08)}
+.ph-num{font-size:42px;font-weight:700}
+.ph-label{font-size:16px;font-weight:700}
+.ph-sub{font-size:12px;color:#cbd5e1}
+.specimen{text-align:center}
+.plate-outer{padding:12px;border:1px solid rgba(255,255,255,.4);display:inline-block}
+.frame{width:260px;height:330px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.frame img{width:100%;height:100%;object-fit:cover}
+.frame svg{width:120px;color:#94a3b8}
+.specimen-cap{font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:12px;color:#cbd5e1}
+.record-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:35px}
+.record-card{background:#fff;padding:25px;border:1px solid #e2e8f0;border-radius:12px}
+.rc-icon{width:50px;height:50px;border-radius:10px;color:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.rc-icon svg{width:25px;height:25px}
+.rc-num{font-size:35px;font-weight:700;color:var(--ink)}
+.rc-label{font-weight:700;margin-top:4px}
+.rc-sub{font-size:13px;color:var(--ink-faint);margin-top:5px}
+.pull-quote{margin:35px 0;padding:30px;border-left:5px solid var(--ochre);background:#fff}
+.pull-quote p{font-size:23px;font-style:italic;margin:0 0 10px}
+.pull-quote cite{font-size:13px;color:var(--ink-faint)}
+.trajectory{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:30px}
+.traj-item{background:#fff;border:1px solid #e2e8f0;padding:22px;border-radius:10px}
+.traj-years{color:var(--ochre);font-weight:700;font-size:14px}
+.traj-title{font-size:17px;font-weight:700;margin:10px 0}
+.traj-desc{font-size:13px;color:var(--ink-faint)}
+.tag-brackets{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.tb-item{padding:8px 14px;border:1px solid #cbd5e1;border-radius:20px;font-size:12px;background:#fff}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:30px}
+.folder-card{display:flex;gap:20px;background:#fff;border:1px solid #e2e8f0;padding:22px;border-radius:12px;cursor:pointer;transition:.3s}
+.folder-card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.folder-icon{width:55px;height:55px;min-width:55px;background:#eaf2f8;color:var(--petrol);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.folder-icon svg{width:28px}
+.folder-title{font-weight:700;font-size:16px}
+.folder-tag{font-size:11px;color:var(--ochre);text-transform:uppercase;letter-spacing:1px}
+.folder-action{font-size:12px;color:var(--petrol);font-weight:700;margin-top:7px}
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.8);display:none;align-items:center;justify-content:center;padding:20px;z-index:9999}
+.modal-overlay.active{display:flex}
+.modal-container{background:#fff;width:min(1000px,100%);max-height:90vh;overflow:auto;border-radius:15px;padding:30px;position:relative}
+.modal-close{position:absolute;right:20px;top:18px;border:0;background:#f1f5f9;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:18px}
+.modal-title{font-size:25px;font-weight:700;padding-right:50px}
+.modal-subtitle{color:var(--ink-faint);margin:5px 0 25px}
+.modal-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.modal-img-card{border:1px solid #e2e8f0;border-radius:10px;overflow:hidden}
+.modal-img-wrapper{height:220px;background:#f1f5f9}
+.modal-img-wrapper img{width:100%;height:100%;object-fit:cover}
+.modal-img-cap{padding:12px;font-size:12px;color:var(--ink-faint)}
+.fp-row{display:grid;grid-template-columns:170px 1fr 50px;align-items:center;gap:15px;margin:15px 0}
+.fp-name{font-weight:700}
+.fp-track{height:10px;background:#e2e8f0;border-radius:20px;overflow:hidden}
+.fp-fill{height:100%;background:var(--petrol)}
+.fp-pct{font-size:12px;color:var(--ink-faint)}
+.pub-filters{display:flex;flex-wrap:wrap;gap:10px;margin:25px 0}
+.pfilter{border:1px solid #cbd5e1;background:#fff;padding:9px 15px;border-radius:20px;cursor:pointer;color:var(--ink)}
+.pfilter.active{background:var(--petrol);color:#fff;border-color:var(--petrol)}
+.pub-controls{display:flex;gap:15px;align-items:center;margin-bottom:25px}
+.pub-controls input,.pub-controls select{padding:12px 14px;border:1px solid #cbd5e1;border-radius:8px;background:#fff}
+.pub-controls input{flex:1}
+.pub-count{font-size:12px;color:var(--ink-faint)}
+.pub-entry{display:grid;grid-template-columns:55px 1fr;gap:20px;padding:22px 0;border-bottom:1px solid #e2e8f0}
+.pub-num{font-size:20px;font-weight:700;color:var(--ochre)}
+.pub-title{font-size:16px;font-weight:700;line-height:1.5}
+.pub-cite{font-size:13px;color:var(--ink-faint);margin-top:5px}
+.pub-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.ptag{font-size:10px;border:1px solid #cbd5e1;padding:4px 8px;border-radius:20px;color:#475569}
+.pub-pagination{display:flex;gap:6px;margin-top:25px;flex-wrap:wrap}
+.pg-btn{border:1px solid #cbd5e1;background:#fff;padding:7px 12px;border-radius:6px;cursor:pointer}
+.pg-btn.active{background:var(--petrol);color:#fff}
+.top-publications-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:30px}
+.top-publication-card{display:flex;gap:20px;padding:25px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;transition:.3s}
+.top-publication-card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.top-pub-number{font-size:28px;font-weight:700;color:var(--petrol);min-width:45px}
+.top-pub-content{flex:1}
+.top-pub-type{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:8px}
+.top-pub-content h3{font-size:17px;line-height:1.5;color:var(--ink);margin:0 0 10px}
+.top-pub-venue{font-size:13px;font-style:italic;color:#64748b;margin-bottom:14px}
+.top-pub-meta{display:flex;flex-wrap:wrap;gap:8px}
+.top-pub-meta span{font-size:11px;padding:5px 9px;border:1px solid #cbd5e1;border-radius:20px;color:#475569}
+.pub-link{display:inline-block;margin-top:15px;font-size:12px;color:var(--petrol);font-weight:600}
+.recent-publications-list{margin-top:30px}
+.recent-publication{display:flex;gap:30px;padding:24px 0;border-bottom:1px solid #e2e8f0}
+.recent-year{font-size:22px;font-weight:700;color:var(--petrol);min-width:80px}
+.recent-content{flex:1}
+.recent-type{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:7px}
+.recent-content h3{font-size:17px;line-height:1.5;margin:0 0 8px}
+.recent-venue{font-size:13px;font-style:italic;color:#64748b;margin-bottom:12px}
+.recent-meta{display:flex;gap:10px;flex-wrap:wrap}
+.recent-meta span,.recent-meta a{font-size:11px;color:#475569;border:1px solid #cbd5e1;border-radius:20px;padding:5px 10px}
+.recent-meta a{color:var(--petrol);font-weight:600}
+.featured-award{display:flex;gap:20px;align-items:center;background:#fff;border:1px solid #e2e8f0;border-left:5px solid var(--ochre);padding:25px;border-radius:10px;margin:30px 0}
+.fa-icon{width:45px;height:45px;color:var(--ochre);min-width:45px}
+.fa-tag{font-size:11px;text-transform:uppercase;color:var(--ochre);font-weight:700}
+.fa-title{font-size:20px;font-weight:700}
+.fa-sub{font-size:13px;color:var(--ink-faint)}
+.dist-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px}
+.dist-item{padding:20px 0;border-bottom:1px solid #e2e8f0}
+.dist-year{font-size:12px;color:var(--ochre);font-weight:700}
+.dist-title{font-size:17px;font-weight:700}
+.dist-sub{font-size:13px;color:var(--ink-faint)}
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px}
+.contact-card{background:#fff;padding:25px;border:1px solid #e2e8f0;border-radius:10px}
+.c-lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-faint)}
+.c-val{font-weight:700;margin-top:7px;word-break:break-word}
+.c-val a{color:var(--petrol)}
+footer{background:#172033;color:#cbd5e1;padding:25px 0}
+footer .wrap{display:flex;justify-content:space-between;font-size:12px}
+@media(max-width:900px){#cover .wrap{grid-template-columns:1fr}.record-grid,.trajectory{grid-template-columns:repeat(2,1fr)}.top-publications-grid{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr}.dist-grid{grid-template-columns:1fr}.modal-gallery{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){h1{font-size:40px}h2{font-size:30px}.record-grid,.trajectory,.gallery-grid{grid-template-columns:1fr}.modal-gallery{grid-template-columns:1fr}.pub-controls{flex-direction:column;align-items:stretch}.fp-row{grid-template-columns:100px 1fr 35px}.recent-publication{gap:15px}.recent-year{min-width:55px;font-size:18px}footer .wrap{flex-direction:column;gap:5px}}
+</style>
+</head>
+<body>
+
+<section id="cover">
+<div class="wrap">
+<div>
+<div class="cover-eyebrow">{{ profile.department }}</div>
+<h1>{% if profile %}{{ profile.name }}{% else %}Dr. Prabhpreet Kaur{% endif %}</h1>
+<div class="role">{% if profile %}{{ profile.designation }}, {{ profile.university }}{% endif %}</div>
+<p class="abstract">{% if profile %}{{ profile.short_intro }}{% endif %}</p>
+<div class="pub-highlight">
+<div class="ph-num">{{ publications|length }}</div>
+<div class="ph-text">
+<div class="ph-label">Total Publications</div>
+<div class="ph-sub">Journal articles, conference papers &amp; book chapters</div>
+</div>
+</div>
+</div>
+<div class="specimen">
+<div class="plate-outer">
+<div class="frame">
+{% if profile and profile.profile_image %}
+<img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}">
+{% else %}
+<svg viewBox="0 0 120 150" fill="none"><circle cx="60" cy="50" r="25" stroke="currentColor" stroke-width="2"/><path d="M20 120 C20 90,100 90,100 120" stroke="currentColor" stroke-width="2"/></svg>
+{% endif %}
+</div>
+</div>
+<div class="specimen-cap">Academic Profile Plate</div>
+</div>
+</div>
+</section>
+
+<section id="record" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">01</span> Academic Record</div>
+<h2>Research &amp; Teaching Excellence</h2>
+<div class="record-grid">
+{% for statistic in statistics %}
+<div class="record-card">
+<div class="rc-icon" style="background:{% cycle 'var(--petrol)' 'var(--ochre)' '#059669' '#D97706' %};">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<circle cx="12" cy="12" r="9"></circle><path d="M8 12l2.5 2.5L16 9"></path>
+</svg>
+</div>
+<div class="rc-num">{{ statistic.value }}</div>
+<div class="rc-label">{{ statistic.title }}</div>
+<div class="rc-sub">{{ statistic.description }}</div>
+</div>
+{% empty %}
+<div class="record-card"><div class="rc-num">{{ publications|length }}</div><div class="rc-label">Total Publications</div></div>
+{% endfor %}
+</div>
+</div>
+</section>
+
+<section id="about" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">02</span> Biography</div>
+<h2>Academic Profile &amp; Focus</h2>
+<p>{% if profile %}{{ profile.biography|linebreaksbr }}{% endif %}</p>
+
+{% if profile.research_vision %}
+<div class="pull-quote">
+<p>"{{ profile.research_vision }}"</p>
+<cite>— Research Vision {{ profile.department }}</cite>
+</div>
+{% endif %}
+
+<div class="plate-head" style="margin-top:40px;"><span class="num">02.1</span> Research Trajectory</div>
+<div class="trajectory">
+{% for item in research_trajectory %}
+<div class="traj-item">
+<div class="traj-years">{{ item.year }}</div>
+<div class="traj-title">{{ item.title }}</div>
+<div class="traj-desc">{{ item.description }}</div>
+</div>
+{% endfor %}
+</div>
+
+<div class="tag-brackets">
+{% for area in research_areas %}
+<span class="tb-item">{{ area.name }}</span>
+{% endfor %}
+</div>
+</div>
+</section>
+
+<section id="events" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">03</span> Media &amp; Gallery</div>
+<h2>Events, Talks &amp; Highlights</h2>
+<div class="plate-sub">Glimpses from key academic lectures, workshops, conferences and publishing milestones.</div>
+
+<div class="gallery-grid">
+{% for event in events %}
+<div class="folder-card" onclick="openGallery({{ event.id }})">
+<div class="folder-icon">
+<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 6c0-1.1-.9-2-2-2H10L8 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6z"/></svg>
+</div>
+<div class="folder-info">
+<div class="folder-title">{{ event.title }}</div>
+<span class="folder-tag">{{ event.get_event_type_display }}</span>
+{% if event.event_date %}<div class="folder-action">{{ event.event_date|date:"d M Y" }}</div>{% endif %}
+<div class="folder-action">View Photos →</div>
+</div>
+</div>
+
+<div id="event-data-{{ event.id }}" style="display:none;">
+{% for image in event.images.all %}
+<div class="gallery-image-data" data-src="{{ image.image.url }}" data-caption="{{ image.caption }}"></div>
+{% endfor %}
+</div>
+{% endfor %}
+</div>
+</div>
+</section>
+
+<div class="modal-overlay" id="gallery-modal" onclick="closeModalOnOuterClick(event)">
+<div class="modal-container">
+<button class="modal-close" onclick="closeGallery()">✕</button>
+<div class="modal-title" id="modal-title">Event Highlights</div>
+<div class="modal-subtitle" id="modal-subtitle">Photo Gallery</div>
+<div class="modal-gallery" id="modal-gallery"></div>
+</div>
+</div>
+
+<section id="fingerprint" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">04</span> Analytics</div>
+<h2>Research Keyword Fingerprint</h2>
+<div class="plate-sub">Most frequent key terms recurring across published titles.</div>
+<div id="fingerprint-list"></div>
+<div id="all-pub-titles" style="display:none;">
+{% for publication in publications %}<span>{{ publication.title }}</span>{% endfor %}
+</div>
+</div>
+</section>
+
+<section id="publications" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">05</span> Publications</div>
+<h2>Complete Publication Record</h2>
+
+<div class="pub-filters">
+<button class="pfilter active" data-type="all">All Outputs ({{ publications|length }})</button>
+<button class="pfilter" data-type="journal">Journals</button>
+<button class="pfilter" data-type="conference">Conferences</button>
+<button class="pfilter" data-type="chapter">Book Chapters</button>
+<button class="pfilter" data-type="book">Books</button>
+</div>
+
+<div class="pub-controls">
+<input type="search" id="pub-search" placeholder="Search publication title or venue...">
+<select id="pub-year"><option value="">All years</option></select>
+<span class="pub-count" id="pub-count"></span>
+</div>
+
+<div id="pub-list">
+{% for publication in publications %}
+<div class="pub-entry publication-item" data-type="{{ publication.publication_type }}" data-year="{{ publication.publication_year }}" data-search="{{ publication.title|lower }} {{ publication.journal_or_venue|lower }}">
+<div class="pub-num">{{ forloop.counter|stringformat:"02d" }}</div>
+<div>
+<div class="pub-title">{{ publication.title }}</div>
+<div class="pub-cite"><em>{{ publication.journal_or_venue }}</em> — {{ publication.publication_year }}</div>
+<div class="pub-tags">
+<span class="ptag">{{ publication.get_publication_type_display }}</span>
+{% if publication.scopus_indexed %}<span class="ptag">Scopus</span>{% endif %}
+{% if publication.citation_count %}<span class="ptag">{{ publication.citation_count }} Citations</span>{% endif %}
+{% if publication.doi %}<a class="ptag" href="{{ publication.doi }}" target="_blank">DOI</a>{% endif %}
+</div>
+</div>
+</div>
+{% empty %}
+<div class="empty-message">No publications available.</div>
+{% endfor %}
+</div>
+<div class="pub-pagination" id="pub-pagination"></div>
+</div>
+</section>
+
+<section id="top-publications" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">05.1</span> Featured Research</div>
+<h2>Top 5 Publications</h2>
+<div class="plate-sub">Selected research publications highlighted by the author.</div>
+
+<div class="top-publications-grid">
+{% for publication in top_publications %}
+<div class="top-publication-card">
+<div class="top-pub-number">{{ forloop.counter|stringformat:"02d" }}</div>
+<div class="top-pub-content">
+<div class="top-pub-type">{{ publication.get_publication_type_display }}</div>
+<h3>{{ publication.title }}</h3>
+<div class="top-pub-venue">{{ publication.journal_or_venue }}</div>
+<div class="top-pub-meta">
+<span>{{ publication.publication_year }}</span>
+{% if publication.scopus_indexed %}<span>Scopus Indexed</span>{% endif %}
+{% if publication.citation_count %}<span>{{ publication.citation_count }} Citations</span>{% endif %}
+</div>
+{% if publication.doi %}<a href="{{ publication.doi }}" target="_blank" class="pub-link">View DOI →</a>{% endif %}
+</div>
+</div>
+{% empty %}
+<div class="empty-message">No top publications available.</div>
+{% endfor %}
+</div>
+</div>
+</section>
+
+<section id="recent-publications" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">05.2</span> Latest Research</div>
+<h2>Recent Publications</h2>
+<div class="plate-sub">Latest research articles, conference papers and book chapters.</div>
+
+<div class="recent-publications-list">
+{% for publication in recent_publications %}
+<div class="recent-publication">
+<div class="recent-year">{{ publication.publication_year }}</div>
+<div class="recent-content">
+<div class="recent-type">{{ publication.get_publication_type_display }}</div>
+<h3>{{ publication.title }}</h3>
+{% if publication.journal_or_venue %}<div class="recent-venue">{{ publication.journal_or_venue }}</div>{% endif %}
+<div class="recent-meta">
+{% if publication.scopus_indexed %}<span>Scopus</span>{% endif %}
+{% if publication.citation_count %}<span>{{ publication.citation_count }} Citations</span>{% endif %}
+{% if publication.doi %}<a href="{{ publication.doi }}" target="_blank">DOI →</a>{% endif %}
+</div>
+</div>
+</div>
+{% empty %}
+<div class="empty-message">No recent publications available.</div>
+{% endfor %}
+</div>
+</div>
+</section>
+
+<section id="distinctions" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">06</span> Recognition</div>
+<h2>Distinctions &amp; Awards</h2>
+
+{% if awards %}
+{% with featured=awards.0 %}
+<div class="featured-award">
+<svg class="fa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+<div>
+<div class="fa-tag">{{ featured.year }} · Award</div>
+<div class="fa-title">{{ featured.title }}</div>
+<div class="fa-sub">{{ featured.awarding_body }}{% if featured.description %} · {{ featured.description }}{% endif %}</div>
+</div>
+</div>
+{% endwith %}
+{% endif %}
+
+<div class="dist-grid">
+<div>
+<div class="plate-head"><span class="num">06.1</span> Honors &amp; Recognition</div>
+{% for award in awards %}
+<div class="dist-item">
+<div class="dist-year">{{ award.year }}</div>
+<div class="dist-title">{{ award.title }}</div>
+<div class="dist-sub">{{ award.awarding_body }}{% if award.description %} · {{ award.description }}{% endif %}</div>
+</div>
+{% empty %}
+<p>No awards available.</p>
+{% endfor %}
+</div>
+
+<div>
+<div class="plate-head"><span class="num">06.2</span> FDPs &amp; Training</div>
+{% for training in trainings %}
+<div class="dist-item">
+<div class="dist-year">{{ training.year }}</div>
+<div class="dist-title">{{ training.title }}</div>
+<div class="dist-sub">{{ training.organizer }}{% if training.description %} · {{ training.description }}{% endif %}</div>
+</div>
+{% empty %}
+<p>No training records available.</p>
+{% endfor %}
+</div>
+</div>
+</div>
+</section>
+
+<section id="contact" class="plate">
+<div class="wrap">
+<div class="plate-head"><span class="num">07</span> Communication</div>
+<h2>Contact &amp; Correspondence</h2>
+<div class="contact-grid">
+{% if profile %}
+<div class="contact-card">
+<div class="c-lbl">Primary Email</div>
+<div class="c-val"><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></div>
+</div>
+
+{% if profile.alternate_email %}
+<div class="contact-card">
+<div class="c-lbl">Alternate Email</div>
+<div class="c-val"><a href="mailto:{{ profile.alternate_email }}">{{ profile.alternate_email }}</a></div>
+</div>
+{% endif %}
+
+<div class="contact-card">
+<div class="c-lbl">Institution</div>
+<div class="c-val">{{ profile.university }}</div>
+</div>
+
+<div class="contact-card">
+<div class="c-lbl">Department</div>
+<div class="c-val">{{ profile.department }}</div>
+</div>
+{% endif %}
+</div>
+</div>
+</section>
+
+<footer>
+<div class="wrap">
+<span>© {% now "Y" %} {% if profile %}{{ profile.name }}{% endif %}</span>
+<span>{% if profile %}{{ profile.university }}{% endif %}</span>
+</div>
+</footer>
+
+<script>
+function openGallery(id){
+const data=document.getElementById("event-data-"+id);
+const modal=document.getElementById("gallery-modal");
+const gallery=document.getElementById("modal-gallery");
+const card=data.closest(".plate").querySelector(".folder-card[onclick*='"+id+"']");
+const title=card.querySelector(".folder-title").textContent;
+const tag=card.querySelector(".folder-tag").textContent;
+document.getElementById("modal-title").textContent=title;
+document.getElementById("modal-subtitle").textContent=tag;
+const images=data.querySelectorAll(".gallery-image-data");
+gallery.innerHTML="";
+images.forEach((img,index)=>{
+gallery.innerHTML+=`<div class="modal-img-card"><div class="modal-img-wrapper"><img src="${img.dataset.src}" alt="${img.dataset.caption||"Event Photo"}"></div><div class="modal-img-cap">${img.dataset.caption||"Event Photo "+(index+1)}</div></div>`;
+});
+if(!images.length)gallery.innerHTML='<div style="padding:30px;color:#64748b;">No photos available for this event.</div>';
+modal.classList.add("active");
+document.body.style.overflow="hidden";
+}
+function closeGallery(){document.getElementById("gallery-modal").classList.remove("active");document.body.style.overflow="";}
+function closeModalOnOuterClick(e){if(e.target.id==="gallery-modal")closeGallery();}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeGallery();});
+
+const stopwords=new Set(["a","an","the","of","in","on","for","and","to","using","based","with","from","by","is","are","various","novel","new","review","comparative","improved","approach","study","survey","analysis","technique","techniques","through","their","into","from"]);
+const freq={};
+document.querySelectorAll("#all-pub-titles span").forEach(el=>{
+el.textContent.toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).forEach(word=>{
+if(word.length>=4&&!stopwords.has(word))freq[word]=(freq[word]||0)+1;
+});
+});
+const fp=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,10);
+const fpMax=fp.length?fp[0][1]:1;
+document.getElementById("fingerprint-list").innerHTML=fp.map(x=>`<div class="fp-row"><div class="fp-name">${x[0].charAt(0).toUpperCase()+x[0].slice(1)}</div><div class="fp-track"><div class="fp-fill" style="width:${Math.round(x[1]/fpMax*100)}%"></div></div><div class="fp-pct">${x[1]}×</div></div>`).join("");
+
+const items=[...document.querySelectorAll(".publication-item")];
+const search=document.getElementById("pub-search");
+const year=document.getElementById("pub-year");
+const count=document.getElementById("pub-count");
+const pagination=document.getElementById("pub-pagination");
+const PAGE_SIZE=8;
+let activeType="all";
+let currentPage=1;
+
+const years=[...new Set(items.map(x=>x.dataset.year))].sort((a,b)=>b-a);
+year.innerHTML='<option value="">All years</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join("");
+
+function filtered(){
+const q=search.value.toLowerCase().trim();
+const y=year.value;
+return items.filter(item=>(activeType==="all"||item.dataset.type===activeType)&&(!y||item.dataset.year===y)&&(!q||item.dataset.search.includes(q)));
+}
+function renderPubs(){
+const rows=filtered();
+const totalPages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));
+if(currentPage>totalPages)currentPage=totalPages;
+items.forEach(x=>x.style.display="none");
+const start=(currentPage-1)*PAGE_SIZE;
+rows.slice(start,start+PAGE_SIZE).forEach(x=>x.style.display="grid");
+count.textContent=`${rows.length?start+1:0}–${Math.min(start+PAGE_SIZE,rows.length)} of ${rows.length}`;
+pagination.innerHTML="";
+if(totalPages>1){
+for(let i=1;i<=totalPages;i++){
+const btn=document.createElement("button");
+btn.className="pg-btn"+(i===currentPage?" active":"");
+btn.textContent=i;
+btn.onclick=()=>{currentPage=i;renderPubs();window.scrollTo({top:document.getElementById("publications").offsetTop-80,behavior:"smooth"});};
+pagination.appendChild(btn);
+}
+}
+}
+document.querySelectorAll(".pfilter").forEach(btn=>btn.addEventListener("click",()=>{
+document.querySelectorAll(".pfilter").forEach(x=>x.classList.remove("active"));
+btn.classList.add("active");
+activeType=btn.dataset.type;
+currentPage=1;
+renderPubs();
+}));
+search.addEventListener("input",()=>{currentPage=1;renderPubs();});
+year.addEventListener("change",()=>{currentPage=1;renderPubs();});
+renderPubs();
+</script>
+
+</body>
+</html>

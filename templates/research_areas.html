@@ -1,0 +1,35 @@
+{% extends 'sidebar.html' %}
+{% block title %}Research Areas{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Research Areas</h1>
+        <p>Manage research areas and keywords.</p>
+    </div>
+    <a href="{% url 'add_research_area' %}" class="add-btn"><i class="fa-solid fa-plus"></i> Add Research Area</a>
+</div>
+<div class="area-grid">
+    {% for area in areas %}
+    <div class="area-card">
+        <div class="area-icon"><i class="fa-solid fa-flask"></i></div>
+        <div class="area-content">
+            <h3>{{ area.name }}</h3>
+            {% if area.is_active %}
+            <span class="status active">Active</span>
+            {% else %}
+            <span class="status inactive">Inactive</span>
+            {% endif %}
+        </div>
+        <div class="actions">
+            <a href="{% url 'edit_research_area' area.id %}" class="edit"><i class="fa-solid fa-pen"></i></a>
+            <a href="{% url 'delete_research_area' area.id %}" class="delete"><i class="fa-solid fa-trash"></i></a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty">No research areas found.</div>
+    {% endfor %}
+</div>
+<style>
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.page-header h1{font-size:25px;color:#111827}.page-header p{font-size:13px;color:#6b7280;margin-top:5px}.add-btn{display:inline-flex;align-items:center;gap:8px;background:#2563eb;color:#fff;padding:11px 17px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600}.area-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.area-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;display:flex;align-items:center;gap:14px}.area-icon{width:45px;height:45px;background:#eff6ff;color:#2563eb;border-radius:10px;display:flex;align-items:center;justify-content:center}.area-content{flex:1}.area-content h3{font-size:14px;color:#1e293b;margin-bottom:7px}.status{padding:4px 8px;border-radius:15px;font-size:9px;font-weight:600}.active{background:#dcfce7;color:#15803d}.inactive{background:#fee2e2;color:#b91c1c}.actions{display:flex;gap:6px}.actions a{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;text-decoration:none;font-size:11px}.edit{background:#eff6ff;color:#2563eb}.delete{background:#fef2f2;color:#dc2626}.empty{background:#fff;padding:40px;text-align:center;color:#64748b}@media(max-width:900px){.area-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.area-grid{grid-template-columns:1fr}}
+</style>
+{% endblock %}

@@ -1,0 +1,105 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Prabhpreet Admin{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Arial,sans-serif;background:#f5f7fb}
+        .sidebar{width:270px;height:100vh;position:fixed;left:0;top:0;background:#0f172a;color:white;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,.08)}
+        .brand{display:flex;align-items:center;gap:12px;padding:5px 10px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
+        .brand-logo{width:45px;height:45px;border-radius:11px;background:linear-gradient(135deg,#2563eb,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:bold}
+        .brand-text h2{font-size:17px;font-weight:600}
+        .brand-text p{color:#94a3b8;font-size:11px;margin-top:3px}
+        .profile{margin:18px 5px;padding:12px;background:rgba(255,255,255,.05);border-radius:12px;display:flex;align-items:center;gap:10px}
+        .profile-img{width:40px;height:40px;border-radius:50%;background:#dbeafe;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-weight:bold}
+        .profile-info h4{font-size:12px}
+        .profile-info p{font-size:10px;color:#94a3b8;margin-top:4px}
+        .online{width:7px;height:7px;background:#22c55e;border-radius:50%;margin-left:auto}
+        .menu-title{font-size:10px;color:#64748b;font-weight:bold;letter-spacing:1px;margin:10px 12px}
+        .menu{list-style:none}
+        .menu li{margin:4px 0}
+        .menu a{text-decoration:none;color:#aeb9c9;display:flex;align-items:center;gap:12px;padding:12px;border-radius:9px;font-size:13px;transition:.25s}
+        .menu a i{width:20px;text-align:center;font-size:14px}
+        .menu a:hover{background:rgba(255,255,255,.06);color:white;transform:translateX(2px)}
+        .menu a.active{background:linear-gradient(90deg,#2563eb,#3b82f6);color:white;box-shadow:0 5px 15px rgba(37,99,235,.25)}
+        .website-title{margin-top:22px}
+        .external{margin-left:auto;font-size:9px;color:#64748b}
+        .bottom{margin-top:auto;padding-top:15px;border-top:1px solid rgba(255,255,255,.08)}
+        .help{background:rgba(37,99,235,.08);border-radius:10px;padding:11px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+        .help-icon{width:30px;height:30px;border-radius:8px;background:rgba(59,130,246,.15);color:#60a5fa;display:flex;align-items:center;justify-content:center}
+        .help strong{display:block;font-size:11px}
+        .help span{display:block;font-size:9px;color:#64748b;margin-top:3px}
+        .logout{text-decoration:none;color:#94a3b8;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:9px;font-size:13px;transition:.2s}
+        .logout:hover{background:rgba(239,68,68,.08);color:#f87171}
+        .sidebar::-webkit-scrollbar{width:4px}
+        .sidebar::-webkit-scrollbar-thumb{background:#334155;border-radius:10px}
+        .main-content{margin-left:270px;padding:30px;min-height:100vh}
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">PK</div>
+        <div class="brand-text">
+            <h2>Prabhpreet</h2>
+            <p>Research Portfolio</p>
+        </div>
+    </div>
+
+    <div class="profile">
+        <div class="profile-img">P</div>
+        <div class="profile-info">
+            <h4>Prabhpreet</h4>
+            <p>Administrator</p>
+        </div>
+        <div class="online"></div>
+    </div>
+
+    <div class="menu-title">MAIN MENU</div>
+
+    <ul class="menu">
+        <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a></li>
+        <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i><span>Profile</span></a></li>
+        <li><a href="{% url 'statistics' %}"><i class="fa-solid fa-chart-column"></i><span>Record</span></a></li>
+        <li><a href="{% url 'research_trajectory' %}" class="nav-item"><i class="fa-solid fa-route"></i><span>Research Trajectory</span></a></li>
+        <li><a href="{% url 'research_areas' %}" class="nav-item"><i class="fa-solid fa-flask"></i><span>Research Areas</span></a></li>
+        <li><a href="{% url 'events' %}"><i class="fa-regular fa-calendar-days"></i><span>Events & Media</span></a></li>
+        <li><a href="{% url 'publications' %}"><i class="fa-solid fa-book-open"></i><span>Publications</span></a></li>
+        <li><a href="{% url 'awards' %}"><i class="fa-solid fa-award"></i><span>Awards & Distinctions</span></a></li>
+        <li><a href="{% url 'training' %}"><i class="fa-solid fa-graduation-cap"></i><span>FDP & Training</span></a></li>
+    </ul>
+
+    <div class="menu-title website-title">WEBSITE</div>
+
+    <ul class="menu">
+        <li><a href="#"><i class="fa-solid fa-globe"></i><span>View Website</span><i class="fa-solid fa-arrow-up-right-from-square external"></i></a></li>
+        <li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+    </ul>
+
+    <div class="bottom">
+        <div class="help">
+            <div class="help-icon"><i class="fa-solid fa-circle-question"></i></div>
+            <div>
+                <strong>Need Help?</strong>
+                <span>Manage your portfolio</span>
+            </div>
+        </div>
+        <a href="#" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a>
+    </div>
+
+</aside>
+
+<main class="main-content">
+    {% block content %}
+    {% endblock %}
+</main>
+
+</body>
+</html>
+```

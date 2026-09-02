@@ -1,0 +1,61 @@
+{% extends 'sidebar.html' %}
+{% block title %}Research Trajectory{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Research Trajectory</h1>
+        <p>Manage research journey and achievements.</p>
+    </div>
+    <a href="{% url 'add_research_trajectory' %}" class="add-btn"><i class="fa-solid fa-plus"></i> Add Trajectory</a>
+</div>
+<div class="table-card">
+    <div class="table-top">
+        <h3>Research Journey</h3>
+        <span>{{ trajectories|length }} Records</span>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Year</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Order</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trajectory in trajectories %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><span class="year">{{ trajectory.year }}</span></td>
+                    <td><strong>{{ trajectory.title }}</strong></td>
+                    <td>{{ trajectory.description|truncatechars:70 }}</td>
+                    <td>{{ trajectory.order }}</td>
+                    <td>
+                        {% if trajectory.is_active %}
+                        <span class="status active">Active</span>
+                        {% else %}
+                        <span class="status inactive">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="{% url 'edit_research_trajectory' trajectory.id %}" class="edit"><i class="fa-solid fa-pen"></i></a>
+                            <a href="{% url 'delete_research_trajectory' trajectory.id %}" class="delete"><i class="fa-solid fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="empty">No research trajectory found. <a href="{% url 'add_research_trajectory' %}">Add Trajectory</a></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.page-header h1{font-size:25px;color:#111827}.page-header p{font-size:13px;color:#6b7280;margin-top:5px}.add-btn{display:inline-flex;align-items:center;gap:8px;background:#2563eb;color:#fff;padding:11px 17px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600}.table-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden}.table-top{padding:20px;border-bottom:1px solid #e5e7eb}.table-top h3{font-size:16px;color:#1e293b}.table-top span{font-size:12px;color:#94a3b8}.table-responsive{overflow-x:auto}table{width:100%;min-width:900px;border-collapse:collapse}th{padding:14px 18px;background:#f8fafc;color:#64748b;text-align:left;font-size:11px;text-transform:uppercase}td{padding:15px 18px;border-top:1px solid #f1f5f9;color:#475569;font-size:13px}.year{background:#eff6ff;color:#2563eb;padding:5px 9px;border-radius:6px;font-size:11px;font-weight:600}.status{padding:5px 9px;border-radius:20px;font-size:10px;font-weight:600}.active{background:#dcfce7;color:#15803d}.inactive{background:#fee2e2;color:#b91c1c}.actions{display:flex;gap:7px}.actions a{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:7px;text-decoration:none}.edit{background:#eff6ff;color:#2563eb}.delete{background:#fef2f2;color:#dc2626}.empty{text-align:center;padding:45px}
+</style>
+{% endblock %}
