@@ -27,6 +27,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "myapp",
+    'cloudinary',
+    'cloudinary_storage'
 ]
 
 
@@ -111,8 +113,8 @@ STATICFILES_DIRS = [y]
 #MEDIA_URL = "/"
 #MEDIA_ROOT = BASE_DIR / "media"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
