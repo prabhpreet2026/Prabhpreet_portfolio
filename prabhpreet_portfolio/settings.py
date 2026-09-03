@@ -1,4 +1,4 @@
-```python
+
 """
 Django settings for prabhpreet_portfolio project.
 
@@ -120,4 +120,4 @@ STORAGES = {
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-```
+
