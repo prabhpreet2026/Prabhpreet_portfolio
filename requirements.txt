@@ -7,4 +7,4 @@ tzdata==2023.3
 Pillow==11.3.0
 cloudinary
 django-cloudinary-storage
-
+dj-database-url
