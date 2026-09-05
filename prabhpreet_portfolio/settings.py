@@ -13,7 +13,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 x = os.path.join(BASE_DIR, "templates")
 y = os.path.join(BASE_DIR, "static")
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-change-this-key")
+#SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-change-this-key")
+SECRET_KEY = "django-insecure-e=wg93#a_u-=r%k3e0++cviqqu4g00x+@1f^q1p8se9pl0ih@g"
+
 
 DEBUG = False
 
