@@ -20,7 +20,7 @@ SECRET_KEY = "django-insecure-e=wg93#a_u-=r%k3e0++cviqqu4g00x+@1f^q1p8se9pl0ih@g
 DEBUG = False
 
 #ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = ["prabhpreet-portfolio.onrender.com/"]
+ALLOWED_HOSTS = ["prabhpreet-portfolio.onrender.com"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
