@@ -20,7 +20,7 @@ SECRET_KEY = "django-insecure-e=wg93#a_u-=r%k3e0++cviqqu4g00x+@1f^q1p8se9pl0ih@g
 DEBUG = False
 
 #ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = ["https://prabhpreet-portfolio.onrender.com/"]
+ALLOWED_HOSTS = ["prabhpreet-portfolio.onrender.com/"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -54,10 +54,9 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
-                "django.template.context_processors.debug",
+               "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
         },
@@ -75,7 +74,6 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
@@ -97,7 +95,7 @@ CLOUDINARY_STORAGE = {
 
 STORAGES = {
    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+       "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
